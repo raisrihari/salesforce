@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Product_SKU_for_High_Priority_Te</fullName>
+    <active>true</active>
+    <description>Prompts users to provide a &apos;WD Specific Product/SKU&apos; when a technical issue case is marked as &apos;High&apos; or &apos;Critical&apos; priority to facilitate faster, more accurate technical assistance for Winchester Dynamics products.</description>
+    <errorConditionFormula>AND(
+    /* Check if it&apos;s one of the technical issue record types */
+    OR(
+        RecordType.DeveloperName = &quot;WD_Technical_Issue_Building_Tech&quot;,
+        RecordType.DeveloperName = &quot;WD_Technical_Issue_SPS&quot;,
+        RecordType.DeveloperName = &quot;WD_Technical_Issue_Aerospace&quot;,
+        RecordType.DeveloperName = &quot;WD_Technical_Issue_Process_Solutions&quot;
+    ),
+    OR(
+        ISPICKVAL(Priority, &quot;High&quot;),
+        ISPICKVAL(Priority, &quot;Critical&quot;) 
+    ),
+    ISBLANK( WD_Specific_Product__c )
+)</errorConditionFormula>
+    <errorDisplayField>WD_Specific_Product_SKU__c</errorDisplayField>
+    <errorMessage>For High or Critical priority technical issues, please provide the Specific Product/SKU to expedite support.</errorMessage>
+</ValidationRule>

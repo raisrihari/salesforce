@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Product_SKU__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>The unique Stock Keeping Unit or internal identifier for the Winchester Dynamics product. Used as an External ID</description>
+    <externalId>true</externalId>
+    <inlineHelpText>Enter the unique SKU or model number for this product. This value must be unique across all products</inlineHelpText>
+    <label>WD Product SKU</label>
+    <length>100</length>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

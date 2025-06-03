@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Reopen_After_Final_Closure</fullName>
+    <active>true</active>
+    <description>Prevents a case from being reopened (Status changed from a final closed state) once it has been definitively closed, maintaining the integrity of closed case data for Winchester Dynamics. A new case should be logged for new issues.</description>
+    <errorConditionFormula>AND(
+    /* Check if the PRIOR status was a final closed status */
+    OR(
+        ISPICKVAL(PRIORVALUE(Status), &quot;Closed - Resolved&quot;),
+        ISPICKVAL(PRIORVALUE(Status), &quot;Closed - Unresolved (No Fix)&quot;),
+        ISPICKVAL(PRIORVALUE(Status), &quot;Closed - No Action Needed&quot;),
+        ISPICKVAL(PRIORVALUE(Status), &quot;Closed - Duplicate&quot;),
+        ISPICKVAL(PRIORVALUE(Status), &quot;Closed&quot;)
+    ),
+    /* Check if the NEW status is NOT one of the final closed statuses */
+    NOT(
+        OR(
+            ISPICKVAL(Status, &quot;Closed - Resolved&quot;),
+            ISPICKVAL(Status, &quot;Closed - Unresolved (No Fix)&quot;),
+            ISPICKVAL(Status, &quot;Closed - No Action Needed&quot;),
+            ISPICKVAL(Status, &quot;Closed - Duplicate&quot;),
+            ISPICKVAL(Status, &quot;Closed&quot;)
+        )
+    ),
+    ISCHANGED(Status) /* Ensures this only fires when Status actually changes */
+)</errorConditionFormula>
+    <errorDisplayField>Status</errorDisplayField>
+    <errorMessage>This case has been permanently closed. Please log a new case if you have a new or related issue</errorMessage>
+</ValidationRule>

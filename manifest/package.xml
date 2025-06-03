@@ -1,36 +1,117 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>*</members>
-        <name>ApexClass</name>
+        <!-- Custom Objects: Retrieve Case (as it's heavily customized) and our new custom object -->
+        <members>Case</members>
+        <members>WD_Product_Portfolio__c</members>
+        <name>CustomObject</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexComponent</name>
+        <!-- Custom Fields: List all custom fields created on Case and WD_Product_Portfolio__c -->
+        <!-- Case Custom Fields -->
+        <members>Case.WD_Product_Line__c</members>
+        <members>Case.WD_Specific_Product__c</members> <!-- Your new lookup field -->
+        <members>Case.WD_Selected_Product_Name__c</members> <!-- Your new formula field -->
+        <members>Case.WD_Reported_Component__c</members>
+        <members>Case.WD_Error_Code__c</members>
+        <members>Case.WD_Customer_Environment_Details__c</members>
+        <members>Case.WD_Initial_Support_Tier__c</members>
+        <members>Case.WD_Resolution_Details__c</members>
+        <members>Case.WD_Primary_Knowledge_Article__c</members>
+        <!-- WD_Product_Portfolio__c Custom Fields (Record Name field is part of CustomObject) -->
+        <members>WD_Product_Portfolio__c.WD_Product_Name__c</members>
+        <members>WD_Product_Portfolio__c.WD_Product_SKU__c</members>
+        <members>WD_Product_Portfolio__c.WD_Product_Line__c</members>
+        <members>WD_Product_Portfolio__c.WD_Product_Version__c</members>
+        <members>WD_Product_Portfolio__c.WD_Default_Support_Tier_Level__c</members>
+        <members>WD_Product_Portfolio__c.WD_Product_Description__c</members> <!-- Corrected API name -->
+        <members>WD_Product_Portfolio__c.WD_Is_Active__c</members>
+        <name>CustomField</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexPage</name>
+        <!-- Record Types for Case -->
+        <members>Case.WD_Product_Inquiry</members>
+        <members>Case.WD_Technical_Issue_BuildingTech</members>
+        <members>Case.WD_Technical_Issue_SPS</members>
+        <members>Case.WD_Technical_Issue_Aerospace</members>
+        <members>Case.WD_Technical_Issue_ProcessSolutions</members>
+        <members>Case.WD_Service_Request</members>
+        <name>RecordType</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexTestSuite</name>
+        <!-- Page Layouts -->
+        <members>Case-WD Product Inquiry Layout</members> <!-- Layout API names are Object-LayoutName -->
+        <members>Case-WD Technical Issue Layout - Common</members>
+        <members>Case-WD Service Request Layout</members>
+        <members>WD_Product_Portfolio__c-WD Product Portfolio Layout</members>
+        <name>Layout</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexTrigger</name>
+        <!-- Validation Rules for Case -->
+        <members>Case.Require_Resolution_Details_on_Close</members>
+        <members>Case.Require_Product_SKU_for_High_Priority_Tech_Issues</members> <!-- Ensure you use the API name of your rule -->
+        <members>Case.Prevent_Reopen_After_Final_Closure</members> <!-- If you implemented this -->
+        <name>ValidationRule</name>
     </types>
     <types>
-        <members>*</members>
-        <name>AuraDefinitionBundle</name>
+        <!-- Support Processes for Case -->
+        <members>WD Product Inquiry Process</members> <!-- API name of the Support Process -->
+        <members>WD Technical Issue Standard Process</members>
+        <members>WD Service Request Process</members>
+        <name>BusinessProcess</name> <!-- Metadata type for Support Process -->
     </types>
     <types>
-        <members>*</members>
-        <name>LightningComponentBundle</name>
+        <!-- Queues -->
+        <members>WD_GCC_General_Inquiries</members> <!-- API name of the Queue -->
+        <members>WD_GTAC_Building_Tech_Tier_1</members>
+        <members>WD_GTAC_SPS_Tier_1</members>
+        <members>WD_GTAC_Aerospace_Tier_1</members>
+        <members>WD_GTAC_Process_Solutions_Tier_1</members>
+        <members>WD_Escalated_Issues_Management_Review</members>
+        <name>Queue</name>
+    </types>
+   
+    <types>
+        <!-- Entitlement Templates -->
+        <members>WD Standard Support</members> <!-- API name of the Entitlement Template -->
+        <members>WD Premium Support</members>
+        <members>WD Critical Systems Support</members>
+        <name>EntitlementTemplate</name>
+    </types>
+   
+    <types>
+        <!-- Milestones -->
+        <!-- NOTE: API names for Milestones are usually the Name field with underscores. VERIFY. -->
+        <members>First_Response_Premium_High_Prio</members> <!-- VERIFY THIS API NAME -->
+        <members>Resolution_Time_Premium_High_Prio</members> <!-- VERIFY THIS API NAME -->
+        <members>First_Response_Premium_Medium_Prio</members> <!-- VERIFY THIS API NAME -->
+        <members>Resolution_Time_Premium_Medium_Prio</members> <!-- VERIFY THIS API NAME -->
+        <members>First_Response_Standard_High_Prio</members> <!-- VERIFY THIS API NAME -->
+        <members>Resolution_Time_Standard_High_Prio</members> <!-- VERIFY THIS API NAME -->
+        <members>First_Response_Critical_Support</members> <!-- VERIFY THIS API NAME -->
+        <members>Resolution_Time_Critical_Support_P1</members> <!-- VERIFY THIS API NAME -->
+        <name>MilestoneType</name>
     </types>
     <types>
-        <members>*</members>
-        <name>StaticResource</name>
+        <!-- Entitlement Processes -->
+        <members>WD Premium Support Process</members> <!-- API name of the Entitlement Process -->
+        <members>WD Standard Support Process</members>
+        <members>WD Critical Systems Support Process</members>
+        <name>EntitlementProcess</name>
     </types>
-    <version>63.0</version>
+    <types>
+        <!-- Your Flow -->
+        <members>Assign_Entitlement_to_New_Case</members> <!-- API name of your Flow. VERIFY -->
+        <name>Flow</name>
+    </types>
+    <types>
+        <!-- Picklist values are part of CustomField metadata or StandardValueSet for standard picklists -->
+        <!-- We've already included CustomField. For standard picklists like Case.Status, Case.Priority, 
+             if you added custom values, they are retrieved as part of the StandardValueSet. -->
+        <members>CaseStatus</members> <!-- Retrieves standard and custom values for Case Status -->
+        <members>CasePriority</members> <!-- Retrieves standard and custom values for Case Priority -->
+        <!-- Add other StandardValueSets if you customized other standard picklists -->
+        <name>StandardValueSet</name>
+    </types>
+    <version>60.0</version> <!-- Adjust to your org's API version -->
 </Package>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Error_Code__c</fullName>
+    <description>Stores any specific error codes or messages displayed to the customer or found in logs, aiding in rapid diagnosis.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter any error codes displayed to the customer or found in system logs related to this issue.</inlineHelpText>
+    <label>WD Error Code</label>
+    <length>100</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

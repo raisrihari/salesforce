@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Customer_Environment_Details__c</fullName>
+    <description>Provides a space to capture detailed information about the customer&apos;s operating environment relevant to the case, such as OS, network configuration, connected peripherals, or other integrated systems.&quot;</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Describe the customer&apos;s operating environment (e.g., OS version, network setup, integrations, specific configurations) that might be relevant to this case.</inlineHelpText>
+    <label>WD Customer Environment Details</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

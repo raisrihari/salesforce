@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Resolution_Details_on_Close</fullName>
+    <active>true</active>
+    <description>Ensures that the &apos;WD Resolution Details&apos; field is populated before a case can be moved to a &apos;Closed&apos; or &apos;Resolved&apos; status, promoting complete case documentation for Winchester Dynamics.</description>
+    <errorConditionFormula>AND(
+    OR(
+        ISPICKVAL(Status, &quot;Closed - Resolved&quot;), 
+        ISPICKVAL(Status, &quot;Closed - Unresolved (No Fix)&quot;),
+        ISPICKVAL(Status, &quot;Closed - No Action Needed&quot;),
+        ISPICKVAL(Status, &quot;Closed - Duplicate&quot;),
+        ISPICKVAL(Status, &quot;Closed&quot;) /* Standard Closed status */
+    ),
+    ISBLANK(WD_Resolution_Details__c)
+)</errorConditionFormula>
+    <errorDisplayField>WD_Resolution_Details__c</errorDisplayField>
+    <errorMessage>Resolution Details are required before closing or resolving this case. Please provide a summary of the resolution</errorMessage>
+</ValidationRule>

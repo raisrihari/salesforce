@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Specific_Product_SKU__c</fullName>
+    <description>Captures the specific product model number, Stock Keeping Unit (SKU), or software version identifier if provided by the customer or identified by support. Aids in precise troubleshooting and knowledge retrieval.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the specific product model number, SKU, or software version if known (e.g., AeroMax 5000, SPS-Scanner-X1, BT-Controller-V2.1)</inlineHelpText>
+    <label>WD Specific Product/SKU</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

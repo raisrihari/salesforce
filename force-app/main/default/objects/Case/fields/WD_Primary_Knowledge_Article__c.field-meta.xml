@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Primary_Knowledge_Article__c</fullName>
+    <description>Direct link to the primary Salesforce Knowledge Article that was most helpful in resolving this case or was provided to the customer.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Paste the URL of the most relevant Knowledge Article used for this case.</inlineHelpText>
+    <label>WD Primary Knowledge Article</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Url</type>
+</CustomField>

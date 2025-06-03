@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_GCC_General_Inquiries_Case</fullName>
+    <filterScope>Queue</filterScope>
+    <label>WD GCC - General Inquiries</label>
+    <queue>WD_GCC_General_Inquiries</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

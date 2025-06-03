@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Product_Line__c</fullName>
+    <description>Stores the primary Winchester Dynamics product line category associated with the case. Critical for routing, reporting, and entitlement determination</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Select the main Winchester Dynamics product division this case relates to (e.g., Building Technologies, Aerospace)</inlineHelpText>
+    <label>WD Product Line</label>
+    <required>true</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Building Technologies</fullName>
+                <default>false</default>
+                <label>Building Technologies</label>
+            </value>
+            <value>
+                <fullName>Safety &amp; Productivity Solutions (SPS)</fullName>
+                <default>false</default>
+                <label>Safety &amp; Productivity Solutions (SPS)</label>
+            </value>
+            <value>
+                <fullName>Aerospace</fullName>
+                <default>false</default>
+                <label>Aerospace</label>
+            </value>
+            <value>
+                <fullName>Process Solutions</fullName>
+                <default>false</default>
+                <label>Process Solutions</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

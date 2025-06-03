@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Product_Name__c</fullName>
+    <description>The official marketable name of the Winchester Dynamics product or solution.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the full, user-facing name of the product</inlineHelpText>
+    <label>WD Product Name</label>
+    <length>255</length>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

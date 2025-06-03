@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_Initial_Support_Tier__c</fullName>
+    <description>Indicates the initial support tier assessed or assigned when the case is logged. Helps in tracking case flow and escalation paths.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Select the initial support team or tier handling or assessing this case.</inlineHelpText>
+    <label>WD Initial Support Tier</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>GCC (General Customer Care)</fullName>
+                <default>false</default>
+                <label>GCC (General Customer Care)</label>
+            </value>
+            <value>
+                <fullName>GTAC (Global Technical Assistance)</fullName>
+                <default>false</default>
+                <label>GTAC (Global Technical Assistance)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
