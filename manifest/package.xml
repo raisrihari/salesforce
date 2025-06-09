@@ -1,5 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+ <types>
+        <!-- Knowledge Object itself (structure, settings) -->
+        <members>Knowledge</members> <!-- Refers to Knowledge__kav and its base settings -->
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <!-- Custom Fields on Knowledge Object -->
+        <members>Knowledge.WD_Article_Product_Line__c</members>
+        <members>Knowledge.WD_Article_Product_SKUs__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <!-- Knowledge Record Types -->
+        <members>Knowledge.WD_FAQ</members>
+        <members>Knowledge.WD_Troubleshooting_Guide</members>
+        <members>Knowledge.WD_Known_Issue_Workaround</members>
+        <name>RecordType</name>
+    </types>
+    <types>
+        <!-- Knowledge Page Layouts -->
+        <!-- VERIFY these API names in your org. Format: Knowledge-LayoutName -->
+        <!-- It's common for layouts to be auto-named based on record type initially. -->
+        <!-- Example: Knowledge-WD FAQ Layout, Knowledge-WD Troubleshooting Guide Layout -->
+        <members>Knowledge-Knowledge Layout</members> <!-- VERIFY API NAME -->
+        <name>Layout</name>
+    </types>
+    <types>
+        <!-- Data Category Group (if you created and activated one) -->
+        <!-- Replace 'Product_Categories' with the actual API name of your Data Category Group -->
+        <members>Product_Categories</members> <!-- VERIFY API NAME -->
+        <name>DataCategoryGroup</name>
+    </types>
+   
+    <types>
+        <!-- Case Assignment Rules -->
+        <members>Case</members> <!-- The Case object has assignment rules associated with it -->
+        <name>AssignmentRules</name> <!-- Note: The metadata type is plural 'AssignmentRules' -->
+    </types>
     <types>
         <!-- Custom Objects: Retrieve Case (as it's heavily customized) and our new custom object -->
         <members>Case</members>

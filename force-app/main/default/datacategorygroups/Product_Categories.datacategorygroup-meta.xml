@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataCategoryGroup xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <dataCategory>
+        <dataCategory>
+            <label>Building Technologies</label>
+            <name>Building_Technologies</name>
+        </dataCategory>
+        <dataCategory>
+            <label>SPS</label>
+            <name>SPS</name>
+        </dataCategory>
+        <dataCategory>
+            <label>Aerospace</label>
+            <name>Aerospace</name>
+        </dataCategory>
+        <dataCategory>
+            <label>Process Solutions</label>
+            <name>Process_Solutions</name>
+        </dataCategory>
+        <label>All</label>
+        <name>All</name>
+    </dataCategory>
+    <label>Product Categories</label>
+    <objectUsage>
+        <object>KnowledgeArticleVersion</object>
+    </objectUsage>
+</DataCategoryGroup>
