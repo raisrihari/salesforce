@@ -1,7 +1,7 @@
 # Unified Intelligent Service & Resolution Hub for Winchester Dynamics (Salesforce Project)
 
-**Project by: Srihari [Your Last Name, Optional]**
-**Date Started:** [Date you started the project]
+**Project by: Srihari Rai**
+**Date Started: 5/10/25** 
 
 ## 1. Project Purpose & Problem Statement
 
