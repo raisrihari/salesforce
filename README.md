@@ -110,8 +110,44 @@ The "Unified Intelligent Service & Resolution Hub" will provide Winchester Dynam
 
 ---
 
-### **Stage 2: Admin Enhancement - Knowledge Base Integration & Basic Routing Rules (PLANNED)**
-*   *Details to be added as stage progresses.*
+### **Stage 2: Admin Enhancement - Knowledge Base Integration & Basic Case Routing Rules (COMPLETED)**
+
+**Goal:** To enhance the support process by setting up a foundational Knowledge Base within Salesforce and implementing standard Case Assignment Rules to improve the initial routing of incoming cases to the appropriate Level 1 queues for Winchester Dynamics.
+
+**Key Configurations & Developments in Stage 2:**
+
+**I. Salesforce Knowledge Setup:**
+    *   **Salesforce Knowledge Enabled:** Activated the Knowledge module.
+    *   **Knowledge Settings Reviewed:** Default settings maintained initially.
+    *   **Article Record Types Created:**
+        *   `WD_FAQ` (API: `WD_FAQ`): For Frequently Asked Questions.
+        *   `WD_Troubleshooting_Guide` (API: `WD_Troubleshooting_Guide`): For detailed troubleshooting procedures.
+        *   `WD_Known_Issue_Workaround` (API: `WD_Known_Issue_Workaround`): For documenting known issues and workarounds.
+    *   **Knowledge Page Layouts Customized (Basic):** Ensured essential fields (Title, Summary, Body, custom categorization fields) are accessible on layouts like `Knowledge-WD FAQ Layout`, `Knowledge-WD Troubleshooting Guide Layout`, etc. *(Self-verify and list actual layout API names if different)*.
+    *   **Custom Fields Added to Knowledge Object:**
+        *   `WD_Article_Product_Line__c` (Multi-Select Picklist): Categorizes articles by Winchester Dynamics product lines.
+        *   `WD_Article_Product_SKUs__c` (Text Area): Lists comma-separated Product SKUs relevant to the article.
+    *   **Sample Knowledge Articles Created:** [Number] sample articles of various types were manually created/imported and tagged with relevant product lines and SKUs using the custom fields. Articles were published.
+    *   **(Optional) Data Category Setup:** A basic Data Category Group (`Product_Categories` - *Verify API Name*) was implemented, mirroring product lines for hierarchical article organization. Sample articles were assigned to these categories.
+
+**II. Basic Case Assignment Rules:**
+    *   **Active Case Assignment Rule Created:**
+        *   **Rule Name:** `WD Standard Case Assignment` (Set as Active).
+        *   **Description:** "Standard case assignment rule for Winchester Dynamics. Routes new cases to appropriate Level 1 queues based on Product Line."
+    *   **Rule Entries Configured (Order of Evaluation):**
+        1.  **Criteria:** `Case: WD_Product_Line__c` equals `Building Technologies`
+            *   **Assign to Queue:** `WD_GTAC_Building_Tech_Tier_1`
+        2.  **Criteria:** `Case: WD_Product_Line__c` equals `Safety & Productivity Solutions (SPS)`
+            *   **Assign to Queue:** `WD_GTAC_SPS_Tier_1`
+        3.  **Criteria:** `Case: WD_Product_Line__c` equals `Aerospace`
+            *   **Assign to Queue:** `WD_GTAC_Aerospace_Tier_1`
+        4.  **Criteria:** `Case: WD_Product_Line__c` equals `Process Solutions`
+            *   **Assign to Queue:** `WD_GTAC_Process_Solutions_Tier_1`
+        5.  **Criteria (Default/Catch-all):** `Case: WD_Product_Line__c` equals `Other` OR is blank.
+            *   **Assign to Queue:** `WD_GCC_General_Inquiries`
+    *   **Case Page Layouts Updated:** Ensured the "Assign using active assignment rule" checkbox is enabled by default on Case creation/edit pages.
+
+---
 
 ### **Stage 3: Flow Automation - Record-Triggered - Intelligent Case Triage & Enrichment (PLANNED)**
 *   *Details to be added as stage progresses.*
