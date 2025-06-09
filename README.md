@@ -149,15 +149,91 @@ The "Unified Intelligent Service & Resolution Hub" will provide Winchester Dynam
 
 ---
 
-### **Stage 3: Flow Automation - Record-Triggered - Intelligent Case Triage & Enrichment (PLANNED)**
-*   *Details to be added as stage progresses.*
-    *   *Includes auto-population of `Case.WD_Product_Line__c` from selected `WD_Specific_Product__c`.*
+### **Stage 3: Flow Automation - Record-Triggered - Intelligent Case Triage & Enrichment (COMPLETED)**
 
-### **Stage 4: Flow Automation - Screen Flow - Guided Diagnostics & Escalation (PLANNED)**
-*   *Details to be added as stage progresses.*
+**Goal:** To develop Record-Triggered Flows on the Case object to automate triage, enrich cases with information, and alert personnel for Winchester Dynamics. This stage leverages the foundational Case, Product, and Entitlement setup from previous stages.
 
-### **Stage 5: Flow Automation - Scheduled Flow - Proactive Case Monitoring & SLA Management (PLANNED)**
-*   *Details to be added as stage progresses.*
+*   **Flow 1: `Case_Auto_Populate_Product_Details_Tier`**
+    *   **Purpose:** Auto-populates `Case.WD_Product_Line__c` and `Case.WD_Initial_Support_Tier__c` based on the selected `WD_Specific_Product__c` (lookup to Product Portfolio). This ensures data consistency and accurate initial tiering.
+    *   **Trigger:** Case created or `WD_Specific_Product__c` changed and is not blank.
+    *   **Key Logic:**
+        1.  Retrieves the related `WD_Product_Portfolio__c` record.
+        2.  If found, updates the Case with `WD_Product_Line__c` from the Product.
+        3.  Uses a formula to determine and set `WD_Initial_Support_Tier__c` on the Case based on the Product's `WD_Default_Support_Tier_Level__c`.
+
+*   **Flow 2 (Combined A & B): Advanced Case Handling**
+    *   **Part A: `Case_Critical_Case_Identification_Alert`**
+        *   **Purpose:** Identifies critical cases (by "Critical" Priority or keywords like "SYSTEM DOWN," "OUTAGE" in Subject/Description), updates the Case to "Critical" priority, assigns it to the `WD_Escalated_Issues_Management_Review` Queue, and sends alerts (e.g., Chatter post to support managers).
+        *   **Trigger:** Case created or Priority/Subject changed.
+        *   **Key Logic:**
+            1.  Decision element checks for "Critical" priority or specific keywords using formula resources.
+            2.  If critical, retrieves the `WD_Escalated_Issues_Management_Review` Queue ID.
+            3.  Updates the Case OwnerId and Priority.
+            4.  Posts a notification to Chatter.
+    *   **Part B: `Case_Specialized_GTAC_Routing_Task_Creation`**
+        *   **Purpose:** Routes cases already marked for GTAC (by `WD_Initial_Support_Tier__c`) to more specialized GTAC sub-queues (e.g., `WD_GTAC_Aero_Navigation`) based on `WD_Reported_Component__c` and creates an initial diagnostic task for that queue.
+        *   **Trigger:** Case `WD_Initial_Support_Tier__c` is GTAC, and relevant fields (Product, Component, Owner) change or case is new.
+        *   **Key Logic:**
+            1.  Decision element determines the specialized route based on `WD_Product_Line__c` and `WD_Reported_Component__c`.
+            2.  An assignment element sets a variable (`var_TargetQueueDeveloperName`) with the DeveloperName of the target specialized queue.
+            3.  A single Get Records element retrieves the target Queue using `var_TargetQueueDeveloperName`.
+            4.  If Queue is found, Case `OwnerId` is updated.
+            5.  A new Task is created, related to the Case, and assigned to the specialized queue with a dynamic subject and description.
+
+*   **Flow 3: `Case_Suggest_Relevant_Knowledge_Articles`**
+    *   **Purpose:** Suggests relevant published Knowledge Articles on the Case Feed based on the Case's Product Line and the selected Product's SKU to assist agents.
+    *   **Trigger:** Case created or Subject/Product Line/Specific Product (`WD_Specific_Product__c`) changed.
+    *   **Key Logic:**
+        1.  Retrieves up to 3 published Knowledge Articles matching the Case's `WD_Product_Line__c` and the `WD_Product_SKU__c` from the related `WD_Product_Portfolio__c` record. Articles are sorted by `LastPublishedDate`.
+        2.  If articles are found, loops through them.
+        3.  Posts a formatted message to the Case Chatter feed with a link to each suggested article's Title and Summary.
+
+*   **Flow Trigger Order Implementation for Record-Triggered Case Flows:**
+    To ensure predictable execution, the following trigger order has been established:
+    1.  `10`: `Assign_Entitlement_to_New_Case` (From Stage 1, applies SLA)
+    2.  `20`: `Case_Auto_Populate_Product_Details_Tier` (Flow 1 of Stage 3)
+    3.  `30`: `Case_Critical_Case_Identification_Alert` (Flow 2A of Stage 3)
+    4.  `40`: `Case_Specialized_GTAC_Routing_Task_Creation` (Flow 2B of Stage 3)
+    5.  `50`: `Case_Suggest_Relevant_Knowledge_Articles` (Flow 3 of Stage 3)
+
+---
+
+### **Stage 4: Flow Automation - Scheduled Flow - Proactive Case Monitoring & Maintenance (COMPLETED)**
+
+**Goal:** To automate regular checks for potentially stale cases and prompt for review, ensuring no customer issue is neglected.
+
+*   **Flow 4: `Scheduled_Weekly_Stale_Case_Review_Reminder`**
+    *   **Purpose:** Identifies open Winchester Dynamics cases that have not been modified for more than 14 days and creates a reminder task for the case owner to review and take action.
+    *   **Type:** Scheduled-Triggered Flow.
+    *   **Schedule:** Configured to run weekly (e.g., every Monday at 8:00 AM).
+    *   **Key Logic:**
+        1.  Retrieves `Case` records where `IsClosed` is False and `LastModifiedDate` is older than 14 days ago (using a formula resource `{!$Flow.CurrentDateTime} - 14`). Optionally excludes "Critical" priority cases.
+        2.  If stale cases are found, loops through the collection.
+        3.  For each stale case, creates a new `Task` record assigned to the Case Owner, related to the Case, with a dynamic subject (e.g., "Stale Case Review: [Case Number] - [Case Subject]") and a due date (e.g., 2 days from creation). The task description includes details about the case's current status and product line.
+
+---
+
+### **Stage 5: Flow Automation - Screen Flow - Guided Agent Actions & Data Capture (COMPLETED)**
+
+**Goal:** To provide Winchester Dynamics' GTAC agents with a guided, structured process for escalating product defects to the Engineering team, ensuring all critical information is captured consistently.
+
+*   **Flow 5: `ScreenFlow_Escalate_Product_Defect_to_Engineering`**
+    *   **Purpose:** Guides GTAC agents through collecting detailed information for escalating a suspected product defect.
+    *   **Type:** Screen Flow.
+    *   **Launched Via:** A Quick Action button ("Escalate Product Defect") on the Case record page. The flow receives the Case `recordId` as an input variable.
+    *   **Process:**
+        1.  **Get Current Case Details:** Retrieves key information from the launching Case record.
+        2.  **Screen 1: Defect Confirmation & Product Details:** Displays Case/Product information. Collects `Defect Summary` (Text, Req), `Apparent Severity to Customer` (Picklist, Req - reusing Case Priority values), and `Reproducibility` (Picklist, Req - Always, Sometimes, Rarely, etc.).
+        3.  **Screen 2: Steps to Reproduce & Environment:** Collects `Steps_to_Reproduce_Defect` (Long Text Area, Req) and `Additional_Relevant_Environment_Info` (Long Text Area). Displays existing `WD_Customer_Environment_Details__c` from the Case for reference.
+        4.  **Screen 3: Observed vs. Expected Behavior:** Collects `Observed_Behavior` (Long Text Area, Req), `Expected_Behavior` (Long Text Area, Req), and `Workaround_Provided_to_Customer_If_Any` (Text Area).
+        5.  **Get Engineering Queue ID:** Retrieves the ID of the `WD_Engineering_Defect_Review` Queue.
+        6.  **Update Case:** If Queue is found, updates the originating Case (e.g., sets `Status` to "Escalated to Engineering," optionally updates a custom `WD_Escalation_Status__c` picklist, and populates a custom `WD_Engineering_Escalation_Notes__c` long text area with a summary of all inputs from the screens).
+        7.  **Create Task for Engineering:** Creates a new `Task` record assigned to the `WD_Engineering_Defect_Review` Queue, related to the Case. The Task subject and description are dynamically populated with information from the Case and flow inputs, and priority is set based on the "Apparent Severity."
+        8.  **Screen 4: Confirmation Screen:** Displays a success message to the agent, optionally including the created Task ID.
+*   **Supporting Metadata Created for this Flow:**
+    *   New Queue: `WD_Engineering_Defect_Review` (supports Case and Task objects).
+    *   New Quick Action on Case object: `Escalate_Product_Defect` to launch the flow.
+    *   (Potentially) New custom fields on Case for escalation tracking: `WD_Escalation_Status__c` (Picklist), `WD_Engineering_Escalation_Notes__c` (Long Text Area).
 
 ---
 
