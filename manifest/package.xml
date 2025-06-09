@@ -138,10 +138,16 @@
         <name>EntitlementProcess</name>
     </types>
     <types>
-        <!-- Your Flow -->
-        <members>Assign_Entitlement_to_New_Case</members> <!-- API name of your Flow. VERIFY -->
-        <name>Flow</name>
-    </types>
+    <members>case_sla_flow</members>
+    <members>Auto_Populate_Case_Fields_from_Selected_Product_Initial_Tier_Assignment</members>
+    <members>Case_Critical_Case_Identification_Alert</members>
+    <members>Case_Specialized_GTAC_Routing_Task_Creation</members>
+    <members>Case_Suggest_Relevant_Knowledge_Articles</members>
+    <!-- Also include your Scheduled Flow and Screen Flow -->
+    <members>Scheduled_Weekly_Stale_Case_Review_Reminder</members>
+    <members>ScreenFlow_Escalate_Product_Defect_to_Engineering</members>
+    <name>Flow</name>
+</types>
     <types>
         <!-- Picklist values are part of CustomField metadata or StandardValueSet for standard picklists -->
         <!-- We've already included CustomField. For standard picklists like Case.Status, Case.Priority, 

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Post_Suggested_Article_to_Case_Feed</name>
+        <label>Post Suggested Article to Case Feed</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>tt_SuggestedArticlePost</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>chatterPost</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>64.0</apiVersion>
+    <decisions>
+        <description>Checks if the Get Records element found any matching Knowledge Articles.</description>
+        <name>Relevant_Articles_Found</name>
+        <label>Relevant Articles Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Articles_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Relevant_Knowledge_Articles</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Post_Suggested_Article_to_Case_Feed</targetReference>
+            </connector>
+            <label>Yes, Articles Found</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Case: Suggest Relevant Knowledge Articles {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case: Suggest Relevant Knowledge Articles</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Queries for published Knowledge Articles matching the Case&apos;s Product Line, specific Product SKU, and keywords from the Subject</description>
+        <name>Get_Relevant_Knowledge_Articles</name>
+        <label>Get Relevant Knowledge Articles</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Relevant_Articles_Found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>PublishStatus</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Online</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Language</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>en_US</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>WD_Article_Product_Line__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.WD_Product_Line__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Knowledge__kav</object>
+        <sortField>LastPublishedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Relevant_Knowledge_Articles</targetReference>
+        </connector>
+        <filterFormula>OR(
+    ISNEW(),
+    ISCHANGED({!$Record.WD_Product_Line__c}),
+    ISCHANGED({!$Record.WD_Specific_Product__c}) 
+)</filterFormula>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>tt_SuggestedArticlePost</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Suggested Knowledge Article for Case #{!$Record.CaseNumber}:
+{!Get_Relevant_Knowledge_Articles.KnowledgeArticleId}
+{!Get_Relevant_Knowledge_Articles.Summary}
+{!Get_Relevant_Knowledge_Articles.Title}</text>
+    </textTemplates>
+</Flow>

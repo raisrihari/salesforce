@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WD_GTAC_Aero_Avionics_Core_Case</fullName>
+    <filterScope>Queue</filterScope>
+    <label>WD GTAC - Aero - Avionics Core</label>
+    <queue>WD_GTAC_Aero_Avionics_Core</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Critical_Case_Alert</name>
+        <label>Send Critical Case Alert</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>criticalmessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>chatterPost</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>64.0</apiVersion>
+    <decisions>
+        <description>Determines if the case meets criteria to be flagged as critical based on priority or keywords</description>
+        <name>Is_Case_Critical</name>
+        <label>Is Case Critical?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No, Not Critical</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Is_Critical</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Priority</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Critical</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>formula_SubjectContainsCriticalKeyword</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>formula_DescriptionContainsCriticalKeyword</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Escalation_Queue_ID</targetReference>
+            </connector>
+            <label>Yes, Is Critical</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Queue_exist</name>
+        <label>Queue exist</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>yes_exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Escalation_Queue_ID</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Flag_Assign_Critical_Case</targetReference>
+            </connector>
+            <label>yes, exist</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>formula_DescriptionContainsCriticalKeyword</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(
+    CONTAINS(LOWER({!$Record.Description}), &quot;critical&quot;),
+    CONTAINS(LOWER({!$Record.Description}), &quot;system down&quot;),
+    CONTAINS(LOWER({!$Record.Description}), &quot;outage&quot;),
+    CONTAINS(LOWER({!$Record.Description}), &quot;urgent production stoppage&quot;)
+)</expression>
+    </formulas>
+    <formulas>
+        <name>formula_SubjectContainsCriticalKeyword</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(
+    CONTAINS(LOWER({!$Record.Subject}), &quot;critical&quot;),
+    CONTAINS(LOWER({!$Record.Subject}), &quot;system down&quot;),
+    CONTAINS(LOWER({!$Record.Subject}), &quot;outage&quot;),
+    CONTAINS(LOWER({!$Record.Subject}), &quot;urgent production stoppage&quot;)
+)</expression>
+    </formulas>
+    <interviewLabel>Case: Critical Case Identification &amp; Alert {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case: Critical Case Identification &amp; Alert</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Escalation_Queue_ID</name>
+        <label>Get Escalation Queue ID</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Queue_exist</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>WD_Escalated_Issues_Management_Review</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Queue</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Group</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <description>Updates priority, flags as critical, and assigns to the management review queue</description>
+        <name>Flag_Assign_Critical_Case</name>
+        <label>Flag &amp; Assign Critical Case</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Send_Critical_Case_Alert</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>Get_Escalation_Queue_ID.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>Critical</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_Case_Critical</targetReference>
+        </connector>
+        <filterFormula>OR(
+    ISNEW(),
+    ISCHANGED({!$Record.Priority}),
+    ISCHANGED({!$Record.Subject})
+)</filterFormula>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>criticalmessage</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>CRITICAL CASE ALERT! Case #{!$Record.CaseNumber} ({!$Record.Subject}) for Account: {!$Record.Account.Name} requires immediate attention.</text>
+    </textTemplates>
+</Flow>
