@@ -1,0 +1,45 @@
+<template>
+    <div class="contact-card">
+        <div class="card-header">
+            <lightning-icon icon-name="standard:contact" size="small"></lightning-icon>
+            <h3 class="contact-name">{contact.Name}</h3>
+        </div>
+        
+        <div class="card-body">
+            <div class="contact-detail" if:true={contact.Email}>
+                <lightning-icon icon-name="utility:email" size="x-small"></lightning-icon>
+                <span>{contact.Email}</span>
+            </div>
+            
+            <div class="contact-detail" if:true={contact.Phone}>
+                <lightning-icon icon-name="utility:phone_portrait" size="x-small"></lightning-icon>
+                <span>{contact.Phone}</span>
+            </div>
+            
+            <div class="contact-detail" if:true={contact.Department__c}>
+                <lightning-icon icon-name="utility:building" size="x-small"></lightning-icon>
+                <span>{contact.Department__c}</span>
+            </div>
+            
+            <div class="contact-detail">
+                <lightning-icon icon-name="utility:clock" size="x-small"></lightning-icon>
+                <span>{formattedDate}</span>
+            </div>
+        </div>
+        
+        <div class="card-actions">
+            <lightning-button
+                variant="neutral"
+                label="Edit"
+                onclick={handleEdit}
+                icon-name="utility:edit">
+            </lightning-button>
+            <lightning-button
+                variant="destructive"
+                label="Delete"
+                onclick={handleDelete}
+                icon-name="utility:delete">
+            </lightning-button>
+        </div>
+    </div>
+</template>

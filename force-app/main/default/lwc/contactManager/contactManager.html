@@ -1,0 +1,72 @@
+<template>
+    <lightning-card title="Contact Management System" icon-name="standard:contact">
+        <div class="slds-p-around_medium">
+            <!-- Search and Actions Header -->
+            <div class="header-section">
+                <lightning-input
+                    type="search"
+                    placeholder="Search contacts..."
+                    value={searchTerm}
+                    onchange={handleSearch}
+                    class="search-input">
+                </lightning-input>
+                <lightning-button
+                    variant="brand"
+                    label="Add New Contact"
+                    onclick={handleAddContact}
+                    icon-name="utility:add">
+                </lightning-button>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-section">
+                <div class="stat-item">
+                    <span class="stat-number">{totalContacts}</span>
+                    <span class="stat-label">Total Contacts</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{filteredContacts.length}</span>
+                    <span class="stat-label">Showing</span>
+                </div>
+            </div>
+
+            <!-- Contact Form Modal -->
+            <template if:true={showContactForm}>
+                <c-contact-form
+                    contact={selectedContact}
+                    onclose={handleCloseForm}
+                    onsave={handleSaveContact}>
+                </c-contact-form>
+            </template>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading contacts..." size="medium">
+                </lightning-spinner>
+            </template>
+
+            <!-- Contact List -->
+            <template if:false={isLoading}>
+                <div class="contact-grid">
+                    <template for:each={filteredContacts} for:item="contact">
+                        <c-contact-card
+                            key={contact.Id}
+                            contact={contact}
+                            onedit={handleEditContact}
+                            ondelete={handleDeleteContact}>
+                        </c-contact-card>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Empty State -->
+            <template if:true={showEmptyState}>
+                <div class="empty-state">
+                    <lightning-icon icon-name="standard:contact" size="large"></lightning-icon>
+                    <h3>No contacts found</h3>
+                    <p>Try adjusting your search criteria or add a new contact.</p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

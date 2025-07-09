@@ -1,0 +1,18 @@
+.slds-modal__container {
+    max-width: 600px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dddbda;
+}
+
+.slds-modal__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
